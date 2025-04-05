@@ -17,15 +17,15 @@ typedef struct {
 } SlaveInfo;
 
 typedef struct {
-    int n;
-    int p;
-    int s;
+    int n;       // Matrix size
+    int p;       // Port number
+    int s;       // Status (0=master, 1=slave)
     int t;
     SlaveInfo slaves[MAX_SLAVES];
-    int **matrix;  // Now using pointer to pointer for dynamic allocation
+    int **matrix;
 } ProgramState;
 
-void read_config(ProgramState *state) {
+void read_config(ProgramState *state, int required_slaves) {
     FILE *file = fopen(CONFIG_FILE, "r");
     if (!file) {
         perror("Failed to open config file");
@@ -34,7 +34,7 @@ void read_config(ProgramState *state) {
 
     state->t = 0;
     char line[100];
-    while (fgets(line, sizeof(line), file) && state->t < MAX_SLAVES) {
+    while (fgets(line, sizeof(line), file) && state->t < required_slaves) {
         sscanf(line, "%s %d", state->slaves[state->t].ip, &state->slaves[state->t].port);
         state->t++;
     }
@@ -79,9 +79,14 @@ void distribute_submatrices(ProgramState *state) {
     struct timeval time_before, time_after;
     gettimeofday(&time_before, NULL);
 
-    int rows_per_slave = state->n / state->t;
+    int slave_count = state->t;  // Get slave count from state
+    int base_rows_per_slave = state->n / slave_count;
+    int extra_rows = state->n % slave_count;  // Remaining rows to distribute
 
-    for (int slave = 0; slave < state->t; slave++) {
+    int start_row = 0;
+
+    for (int slave = 0; slave < slave_count; slave++) {
+        int rows_for_this_slave = base_rows_per_slave + (slave < extra_rows ? 1 : 0);  // Add 1 row for the first 'extra_rows' slaves
         printf("Sending data to slave %d at IP %s, Port %d\n", slave, state->slaves[slave].ip, state->slaves[slave].port);
 
         int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -102,16 +107,15 @@ void distribute_submatrices(ProgramState *state) {
         }
 
         // Send submatrix size info
-        int info[2] = {rows_per_slave, state->n};
+        int info[2] = {rows_for_this_slave, state->n};
         if (send(sock, info, sizeof(info), 0) != sizeof(info)) {
             perror("Failed to send matrix info");
             exit(EXIT_FAILURE);
         }
 
         // Send the submatrix data in chunks
-        int start_row = slave * rows_per_slave;
-        printf("Sending rows %d to %d to slave %d\n", start_row, start_row + rows_per_slave - 1, slave);
-        for (int i = 0; i < rows_per_slave; i++) {
+        printf("Sending rows %d to %d to slave %d\n", start_row, start_row + rows_for_this_slave - 1, slave);
+        for (int i = 0; i < rows_for_this_slave; i++) {
             int *row = state->matrix[start_row + i];
 
             ssize_t bytes_sent = 0;
@@ -139,6 +143,9 @@ void distribute_submatrices(ProgramState *state) {
         }
 
         close(sock);
+
+        // Update start_row for the next slave
+        start_row += rows_for_this_slave;
     }
 
     gettimeofday(&time_after, NULL);
@@ -251,8 +258,8 @@ void slave_listen(ProgramState *state) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 4) {
-        printf("Usage: %s <matrix_size> <port> <status (0=master, 1=slave)>\n", argv[0]);
+    if (argc != 4 && argc != 5) {  // Allow optional slave count parameter
+        printf("Usage: %s <matrix_size> <port> <status (0=master, 1=slave)> [slave_count]\n", argv[0]);
         return EXIT_FAILURE;
     }
 
@@ -261,26 +268,36 @@ int main(int argc, char *argv[]) {
     state.p = atoi(argv[2]);
     state.s = atoi(argv[3]);
     state.matrix = NULL;
+    state.t = 0;  // Initialize slave count
 
     if (state.n <= 0) {
         printf("Invalid matrix size. Must be positive\n");
         return EXIT_FAILURE;
     }
 
-    read_config(&state);
-
     if (state.s == 0) {
-        printf("Running as master with %d slaves\n", state.t);
-        if (state.n % state.t != 0) {
-            printf("Matrix size must be divisible by number of slaves\n");
+        // Master gets slave count from command line
+        if (argc == 5) {
+            state.t = atoi(argv[4]);
+        } else {
+            printf("Error: Master requires slave count parameter\n");
             return EXIT_FAILURE;
         }
+        
+        printf("Running as master with %d slaves\n", state.t);
+        
+        // Generate slave ports dynamically (5001, 5002, etc.)
+        for (int i = 0; i < state.t; i++) {
+            strcpy(state.slaves[i].ip, "127.0.0.1");
+            state.slaves[i].port = state.p + i + 1;
+        }
+        
         allocate_matrix(&state);
         create_matrix(&state);
         distribute_submatrices(&state);
         free_matrix(&state);
     } else {
-        printf("Running as slave\n");
+        // Slave doesn't need slave count
         slave_listen(&state);
     }
 
