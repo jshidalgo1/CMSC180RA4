@@ -8,7 +8,7 @@ Sending data to slave 0 at IP 127.0.0.1, Port 5001
 Sending rows 0 to 9999 to slave 0
 Sending data to slave 1 at IP 127.0.0.1, Port 5002
 Sending rows 10000 to 19999 to slave 1
-Master elapsed time: 0.749915 seconds
+Master elapsed time: 0.238370 seconds
 ----------------------------------------
 Run #2
 Running as master with 2 slaves
@@ -16,7 +16,7 @@ Sending data to slave 0 at IP 127.0.0.1, Port 5001
 Sending rows 0 to 9999 to slave 0
 Sending data to slave 1 at IP 127.0.0.1, Port 5002
 Sending rows 10000 to 19999 to slave 1
-Master elapsed time: 0.722240 seconds
+Master elapsed time: 0.234711 seconds
 ----------------------------------------
 Run #3
 Running as master with 2 slaves
@@ -24,7 +24,7 @@ Sending data to slave 0 at IP 127.0.0.1, Port 5001
 Sending rows 0 to 9999 to slave 0
 Sending data to slave 1 at IP 127.0.0.1, Port 5002
 Sending rows 10000 to 19999 to slave 1
-Master elapsed time: 0.914214 seconds
+Master elapsed time: 0.236545 seconds
 ----------------------------------------
 Matrix Size: 20000, Slaves: 4
 ----------------------------------------
@@ -38,7 +38,7 @@ Sending data to slave 2 at IP 127.0.0.1, Port 5003
 Sending rows 10000 to 14999 to slave 2
 Sending data to slave 3 at IP 127.0.0.1, Port 5004
 Sending rows 15000 to 19999 to slave 3
-Master elapsed time: 0.644326 seconds
+Master elapsed time: 0.244467 seconds
 ----------------------------------------
 Run #2
 Running as master with 4 slaves
@@ -50,7 +50,7 @@ Sending data to slave 2 at IP 127.0.0.1, Port 5003
 Sending rows 10000 to 14999 to slave 2
 Sending data to slave 3 at IP 127.0.0.1, Port 5004
 Sending rows 15000 to 19999 to slave 3
-Master elapsed time: 0.585005 seconds
+Master elapsed time: 0.234959 seconds
 ----------------------------------------
 Run #3
 Running as master with 4 slaves
@@ -62,7 +62,7 @@ Sending data to slave 2 at IP 127.0.0.1, Port 5003
 Sending rows 10000 to 14999 to slave 2
 Sending data to slave 3 at IP 127.0.0.1, Port 5004
 Sending rows 15000 to 19999 to slave 3
-Master elapsed time: 0.679099 seconds
+Master elapsed time: 0.234135 seconds
 ----------------------------------------
 Matrix Size: 20000, Slaves: 8
 ----------------------------------------
@@ -84,7 +84,7 @@ Sending data to slave 6 at IP 127.0.0.1, Port 5007
 Sending rows 15000 to 17499 to slave 6
 Sending data to slave 7 at IP 127.0.0.1, Port 5008
 Sending rows 17500 to 19999 to slave 7
-Master elapsed time: 0.842296 seconds
+Master elapsed time: 0.226571 seconds
 ----------------------------------------
 Run #2
 Running as master with 8 slaves
@@ -104,7 +104,7 @@ Sending data to slave 6 at IP 127.0.0.1, Port 5007
 Sending rows 15000 to 17499 to slave 6
 Sending data to slave 7 at IP 127.0.0.1, Port 5008
 Sending rows 17500 to 19999 to slave 7
-Master elapsed time: 0.755700 seconds
+Master elapsed time: 0.226816 seconds
 ----------------------------------------
 Run #3
 Running as master with 8 slaves
@@ -124,7 +124,7 @@ Sending data to slave 6 at IP 127.0.0.1, Port 5007
 Sending rows 15000 to 17499 to slave 6
 Sending data to slave 7 at IP 127.0.0.1, Port 5008
 Sending rows 17500 to 19999 to slave 7
-Master elapsed time: 0.578343 seconds
+Master elapsed time: 0.227216 seconds
 ----------------------------------------
 Matrix Size: 20000, Slaves: 16
 ----------------------------------------
@@ -162,7 +162,7 @@ Sending data to slave 14 at IP 127.0.0.1, Port 5015
 Sending rows 17500 to 18749 to slave 14
 Sending data to slave 15 at IP 127.0.0.1, Port 5016
 Sending rows 18750 to 19999 to slave 15
-Master elapsed time: 0.453421 seconds
+Master elapsed time: 0.225889 seconds
 ----------------------------------------
 Run #2
 Running as master with 16 slaves
@@ -198,7 +198,7 @@ Sending data to slave 14 at IP 127.0.0.1, Port 5015
 Sending rows 17500 to 18749 to slave 14
 Sending data to slave 15 at IP 127.0.0.1, Port 5016
 Sending rows 18750 to 19999 to slave 15
-Master elapsed time: 0.591702 seconds
+Master elapsed time: 0.225287 seconds
 ----------------------------------------
 Run #3
 Running as master with 16 slaves
@@ -234,7 +234,7 @@ Sending data to slave 14 at IP 127.0.0.1, Port 5015
 Sending rows 17500 to 18749 to slave 14
 Sending data to slave 15 at IP 127.0.0.1, Port 5016
 Sending rows 18750 to 19999 to slave 15
-Master elapsed time: 0.429478 seconds
+Master elapsed time: 0.222266 seconds
 ----------------------------------------
 Matrix Size: 25000, Slaves: 2
 ----------------------------------------
@@ -244,7 +244,7 @@ Sending data to slave 0 at IP 127.0.0.1, Port 5001
 Sending rows 0 to 12499 to slave 0
 Sending data to slave 1 at IP 127.0.0.1, Port 5002
 Sending rows 12500 to 24999 to slave 1
-Master elapsed time: 1.220691 seconds
+Master elapsed time: 1.068834 seconds
 ----------------------------------------
 Run #2
 Running as master with 2 slaves
@@ -252,7 +252,7 @@ Sending data to slave 0 at IP 127.0.0.1, Port 5001
 Sending rows 0 to 12499 to slave 0
 Sending data to slave 1 at IP 127.0.0.1, Port 5002
 Sending rows 12500 to 24999 to slave 1
-Master elapsed time: 1.188329 seconds
+Master elapsed time: 0.860448 seconds
 ----------------------------------------
 Run #3
 Running as master with 2 slaves
@@ -260,7 +260,7 @@ Sending data to slave 0 at IP 127.0.0.1, Port 5001
 Sending rows 0 to 12499 to slave 0
 Sending data to slave 1 at IP 127.0.0.1, Port 5002
 Sending rows 12500 to 24999 to slave 1
-Master elapsed time: 1.181450 seconds
+Master elapsed time: 0.884647 seconds
 ----------------------------------------
 Matrix Size: 25000, Slaves: 4
 ----------------------------------------
@@ -274,7 +274,7 @@ Sending data to slave 2 at IP 127.0.0.1, Port 5003
 Sending rows 12500 to 18749 to slave 2
 Sending data to slave 3 at IP 127.0.0.1, Port 5004
 Sending rows 18750 to 24999 to slave 3
-Master elapsed time: 1.104838 seconds
+Master elapsed time: 0.665043 seconds
 ----------------------------------------
 Run #2
 Running as master with 4 slaves
@@ -286,7 +286,7 @@ Sending data to slave 2 at IP 127.0.0.1, Port 5003
 Sending rows 12500 to 18749 to slave 2
 Sending data to slave 3 at IP 127.0.0.1, Port 5004
 Sending rows 18750 to 24999 to slave 3
-Master elapsed time: 1.083548 seconds
+Master elapsed time: 0.698423 seconds
 ----------------------------------------
 Run #3
 Running as master with 4 slaves
@@ -298,7 +298,7 @@ Sending data to slave 2 at IP 127.0.0.1, Port 5003
 Sending rows 12500 to 18749 to slave 2
 Sending data to slave 3 at IP 127.0.0.1, Port 5004
 Sending rows 18750 to 24999 to slave 3
-Master elapsed time: 1.053420 seconds
+Master elapsed time: 0.702921 seconds
 ----------------------------------------
 Matrix Size: 25000, Slaves: 8
 ----------------------------------------
@@ -320,7 +320,7 @@ Sending data to slave 6 at IP 127.0.0.1, Port 5007
 Sending rows 18750 to 21874 to slave 6
 Sending data to slave 7 at IP 127.0.0.1, Port 5008
 Sending rows 21875 to 24999 to slave 7
-Master elapsed time: 0.895266 seconds
+Master elapsed time: 0.454495 seconds
 ----------------------------------------
 Run #2
 Running as master with 8 slaves
@@ -340,7 +340,7 @@ Sending data to slave 6 at IP 127.0.0.1, Port 5007
 Sending rows 18750 to 21874 to slave 6
 Sending data to slave 7 at IP 127.0.0.1, Port 5008
 Sending rows 21875 to 24999 to slave 7
-Master elapsed time: 0.989061 seconds
+Master elapsed time: 0.558485 seconds
 ----------------------------------------
 Run #3
 Running as master with 8 slaves
@@ -360,7 +360,7 @@ Sending data to slave 6 at IP 127.0.0.1, Port 5007
 Sending rows 18750 to 21874 to slave 6
 Sending data to slave 7 at IP 127.0.0.1, Port 5008
 Sending rows 21875 to 24999 to slave 7
-Master elapsed time: 0.929653 seconds
+Master elapsed time: 0.603108 seconds
 ----------------------------------------
 Matrix Size: 25000, Slaves: 16
 ----------------------------------------
@@ -398,7 +398,7 @@ Sending data to slave 14 at IP 127.0.0.1, Port 5015
 Sending rows 21876 to 23437 to slave 14
 Sending data to slave 15 at IP 127.0.0.1, Port 5016
 Sending rows 23438 to 24999 to slave 15
-Master elapsed time: 0.912539 seconds
+Master elapsed time: 0.354712 seconds
 ----------------------------------------
 Run #2
 Running as master with 16 slaves
@@ -434,7 +434,7 @@ Sending data to slave 14 at IP 127.0.0.1, Port 5015
 Sending rows 21876 to 23437 to slave 14
 Sending data to slave 15 at IP 127.0.0.1, Port 5016
 Sending rows 23438 to 24999 to slave 15
-Master elapsed time: 0.878524 seconds
+Master elapsed time: 0.418891 seconds
 ----------------------------------------
 Run #3
 Running as master with 16 slaves
@@ -470,7 +470,7 @@ Sending data to slave 14 at IP 127.0.0.1, Port 5015
 Sending rows 21876 to 23437 to slave 14
 Sending data to slave 15 at IP 127.0.0.1, Port 5016
 Sending rows 23438 to 24999 to slave 15
-Master elapsed time: 0.913551 seconds
+Master elapsed time: 0.415336 seconds
 ----------------------------------------
 Matrix Size: 30000, Slaves: 2
 ----------------------------------------
@@ -480,7 +480,7 @@ Sending data to slave 0 at IP 127.0.0.1, Port 5001
 Sending rows 0 to 14999 to slave 0
 Sending data to slave 1 at IP 127.0.0.1, Port 5002
 Sending rows 15000 to 29999 to slave 1
-Master elapsed time: 1.848551 seconds
+Master elapsed time: 1.699138 seconds
 ----------------------------------------
 Run #2
 Running as master with 2 slaves
@@ -488,7 +488,7 @@ Sending data to slave 0 at IP 127.0.0.1, Port 5001
 Sending rows 0 to 14999 to slave 0
 Sending data to slave 1 at IP 127.0.0.1, Port 5002
 Sending rows 15000 to 29999 to slave 1
-Master elapsed time: 1.902368 seconds
+Master elapsed time: 1.549521 seconds
 ----------------------------------------
 Run #3
 Running as master with 2 slaves
@@ -496,7 +496,7 @@ Sending data to slave 0 at IP 127.0.0.1, Port 5001
 Sending rows 0 to 14999 to slave 0
 Sending data to slave 1 at IP 127.0.0.1, Port 5002
 Sending rows 15000 to 29999 to slave 1
-Master elapsed time: 1.834979 seconds
+Master elapsed time: 1.529164 seconds
 ----------------------------------------
 Matrix Size: 30000, Slaves: 4
 ----------------------------------------
@@ -510,7 +510,7 @@ Sending data to slave 2 at IP 127.0.0.1, Port 5003
 Sending rows 15000 to 22499 to slave 2
 Sending data to slave 3 at IP 127.0.0.1, Port 5004
 Sending rows 22500 to 29999 to slave 3
-Master elapsed time: 1.554114 seconds
+Master elapsed time: 1.298952 seconds
 ----------------------------------------
 Run #2
 Running as master with 4 slaves
@@ -522,7 +522,7 @@ Sending data to slave 2 at IP 127.0.0.1, Port 5003
 Sending rows 15000 to 22499 to slave 2
 Sending data to slave 3 at IP 127.0.0.1, Port 5004
 Sending rows 22500 to 29999 to slave 3
-Master elapsed time: 1.457113 seconds
+Master elapsed time: 1.326191 seconds
 ----------------------------------------
 Run #3
 Running as master with 4 slaves
@@ -534,7 +534,7 @@ Sending data to slave 2 at IP 127.0.0.1, Port 5003
 Sending rows 15000 to 22499 to slave 2
 Sending data to slave 3 at IP 127.0.0.1, Port 5004
 Sending rows 22500 to 29999 to slave 3
-Master elapsed time: 1.959413 seconds
+Master elapsed time: 1.379347 seconds
 ----------------------------------------
 Matrix Size: 30000, Slaves: 8
 ----------------------------------------
@@ -556,7 +556,7 @@ Sending data to slave 6 at IP 127.0.0.1, Port 5007
 Sending rows 22500 to 26249 to slave 6
 Sending data to slave 7 at IP 127.0.0.1, Port 5008
 Sending rows 26250 to 29999 to slave 7
-Master elapsed time: 1.733746 seconds
+Master elapsed time: 1.103429 seconds
 ----------------------------------------
 Run #2
 Running as master with 8 slaves
@@ -576,7 +576,7 @@ Sending data to slave 6 at IP 127.0.0.1, Port 5007
 Sending rows 22500 to 26249 to slave 6
 Sending data to slave 7 at IP 127.0.0.1, Port 5008
 Sending rows 26250 to 29999 to slave 7
-Master elapsed time: 1.547367 seconds
+Master elapsed time: 1.152826 seconds
 ----------------------------------------
 Run #3
 Running as master with 8 slaves
@@ -596,7 +596,7 @@ Sending data to slave 6 at IP 127.0.0.1, Port 5007
 Sending rows 22500 to 26249 to slave 6
 Sending data to slave 7 at IP 127.0.0.1, Port 5008
 Sending rows 26250 to 29999 to slave 7
-Master elapsed time: 1.932543 seconds
+Master elapsed time: 1.138721 seconds
 ----------------------------------------
 Matrix Size: 30000, Slaves: 16
 ----------------------------------------
@@ -634,7 +634,7 @@ Sending data to slave 14 at IP 127.0.0.1, Port 5015
 Sending rows 26250 to 28124 to slave 14
 Sending data to slave 15 at IP 127.0.0.1, Port 5016
 Sending rows 28125 to 29999 to slave 15
-Master elapsed time: 1.608422 seconds
+Master elapsed time: 1.136188 seconds
 ----------------------------------------
 Run #2
 Running as master with 16 slaves
@@ -670,7 +670,7 @@ Sending data to slave 14 at IP 127.0.0.1, Port 5015
 Sending rows 26250 to 28124 to slave 14
 Sending data to slave 15 at IP 127.0.0.1, Port 5016
 Sending rows 28125 to 29999 to slave 15
-Master elapsed time: 1.469841 seconds
+Master elapsed time: 1.016025 seconds
 ----------------------------------------
 Run #3
 Running as master with 16 slaves
@@ -706,5 +706,5 @@ Sending data to slave 14 at IP 127.0.0.1, Port 5015
 Sending rows 26250 to 28124 to slave 14
 Sending data to slave 15 at IP 127.0.0.1, Port 5016
 Sending rows 28125 to 29999 to slave 15
-Master elapsed time: 1.410683 seconds
+Master elapsed time: 1.055890 seconds
 ----------------------------------------

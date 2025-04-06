@@ -6,6 +6,7 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <time.h>
+#include <sched.h> // For sched_setaffinity
 
 #define MAX_SLAVES 16
 #define BUFFER_SIZE 1024
@@ -159,9 +160,25 @@ void distribute_submatrices(ProgramState *state) {
     printf("Master elapsed time: %.6f seconds\n", elapsed);
 }
 
+// Set CPU affinity for the current process
+void set_core_affinity(int core_id) {
+    cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    CPU_SET(core_id, &cpuset);
+
+    if (sched_setaffinity(0, sizeof(cpu_set_t), &cpuset) != 0) {
+        perror("Failed to set CPU affinity");
+    } else {
+        printf("Process bound to core %d\n", core_id);
+    }
+}
+
 void slave_listen(ProgramState *state) {
-    struct timeval time_before, time_after;
     printf("Slave on port %d starting...\n", state->p);
+
+    // Set CPU affinity for this slave process
+    int core_id = state->p % sysconf(_SC_NPROCESSORS_ONLN); // Map port to core
+    set_core_affinity(core_id);
 
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) {
@@ -200,7 +217,6 @@ void slave_listen(ProgramState *state) {
         perror("Failed to receive matrix info");
         exit(EXIT_FAILURE);
     }
-    gettimeofday(&time_before, NULL);
     int rows = info[0];
     int cols = info[1];
 
@@ -238,10 +254,6 @@ void slave_listen(ProgramState *state) {
         perror("Failed to send acknowledgment");
         exit(EXIT_FAILURE);
     }
-    gettimeofday(&time_after, NULL);
-    double elapsed = (time_after.tv_sec - time_before.tv_sec) + 
-                    (time_after.tv_usec - time_before.tv_usec) / 1000000.0;
-    printf("Slave elapsed time: %.6f seconds\n", elapsed);
 
     printf("Slave processed %d rows\n", rows);
 

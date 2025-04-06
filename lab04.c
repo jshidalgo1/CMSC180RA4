@@ -228,13 +228,13 @@ void slave_listen(ProgramState *state) {
     }
 
     // Debug: Print the rows received
-    printf("Slave received rows:\n");
-    for (int i = 0; i < 10; i++) {
-        for (int j = 0; j < 10; j++) {
-            printf("%d ", submatrix[i][j]);
-        }
-        printf("\n");
-    }
+    // printf("Slave received rows:\n");
+    // for (int i = 0; i < 10; i++) {
+    //     for (int j = 0; j < 10; j++) {
+    //         printf("%d ", submatrix[i][j]);
+    //     }
+    //     printf("\n");
+    // }
 
     // Send acknowledgment
     if (send(master_sock, "ack", 4, 0) != 4) {
