@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "sysctl.h": "c"
+        "sysctl.h": "c",
+        "tcp.h": "c",
+        "time.h": "c"
     }
 }

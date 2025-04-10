@@ -10,9 +10,9 @@
 #include <pthread.h>
 
 #define MAX_SLAVES 16
-#define BUFFER_SIZE (1024 * 1024)  // 1MB buffer
-#define CONFIG_FILE "config1.txt"
-#define CHUNK_SIZE 10              // Rows per chunk
+#define BUFFER_SIZE (15 * 1024 * 1024)  // 15MB buffer
+#define CONFIG_FILE "config.txt"
+#define CHUNK_SIZE 2000              // Rows per chunk
 
 typedef struct {
     char ip[16];
@@ -251,6 +251,8 @@ void slave_listen(ProgramState *state) {
     int rows = info[0];
     int cols = info[1];
 
+    printf("Slave received matrix size: %d rows x %d cols\n", rows, cols);
+
     // Allocate memory for submatrix
     int **submatrix = (int **)malloc(rows * sizeof(int *));
     if (!submatrix) {
@@ -286,18 +288,26 @@ void slave_listen(ProgramState *state) {
             bytes_received += result;
         }
         
-        // Copy to submatrix
-        for (int j = 0; j < rows_to_receive; j++) {
-            memcpy(submatrix[i + j], buffer + j * cols, cols * sizeof(int));
-        }
+        // // Copy to submatrix
+        // for (int j = 0; j < rows_to_receive; j++) {
+        //     memcpy(submatrix[i + j], buffer + j * cols, cols * sizeof(int));
+        // }
         free(buffer);
     }
+
+    printf("Slave finished receiving data from master.\n");
+
+    // Simulate processing and send acknowledgment
+    // printf("Slave processing data...\n");
+    // sleep(1); // Simulate some processing time
 
     // Send acknowledgment
     if (send(master_sock, "ack", 4, 0) != 4) {
         perror("Failed to send acknowledgment");
         exit(EXIT_FAILURE);
     }
+
+    printf("Slave sent acknowledgment to master.\n");
 
     gettimeofday(&time_after, NULL);
     double elapsed = (time_after.tv_sec - time_before.tv_sec) + 
