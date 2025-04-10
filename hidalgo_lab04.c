@@ -6,11 +6,12 @@
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <time.h>
+#include <netinet/tcp.h>
 #include <pthread.h>
 
 #define MAX_SLAVES 16
 #define BUFFER_SIZE (1024 * 1024)  // 1MB buffer
-#define CONFIG_FILE "config.txt"
+#define CONFIG_FILE "config1.txt"
 #define CHUNK_SIZE 10              // Rows per chunk
 
 typedef struct {
@@ -43,7 +44,7 @@ void read_config(ProgramState *state, int required_slaves) {
 
     state->t = 0;
     char line[100];
-    while (fgets(line, sizeof(line), file && state->t < required_slaves) {
+    while (state->t < required_slaves && fgets(line, sizeof(line), file)) {
         sscanf(line, "%s %d", state->slaves[state->t].ip, &state->slaves[state->t].port);
         state->t++;
     }

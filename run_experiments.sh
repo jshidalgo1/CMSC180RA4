@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM="./lab04"
+PROGRAM="./hidalgo_lab04"
 OUTPUT_FILE="results.txt"
 MATRIX_SIZES=(20000 25000 30000)
 SLAVE_COUNTS=(2 4 8 16)
