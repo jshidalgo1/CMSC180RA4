@@ -163,29 +163,17 @@ void distribute_multicast(ProgramState *state) {
     multicast_addr.sin_addr.s_addr = inet_addr(MULTICAST_GROUP);
     multicast_addr.sin_port = htons(MULTICAST_PORT);
 
-    // Create acknowledgment socket (TCP for reliable ACKs)
-    int ack_sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (ack_sock < 0) {
-        perror("ACK socket creation failed");
-        exit(EXIT_FAILURE);
-    }
+    // Calculate maximum rows per chunk based on UDP packet size
+    #define MAX_UDP_PACKET_SIZE 1400  // Safe size for UDP payload
+    int max_rows_per_chunk = MAX_UDP_PACKET_SIZE / (state->n * sizeof(int));
 
-    // Send matrix metadata first (includes expected ACK port)
-    int metadata[4] = {state->n, state->t, state->p, 1}; // Last 1 indicates multicast
-    if (sendto(sock, metadata, sizeof(metadata), 0, 
-              (struct sockaddr *)&multicast_addr, sizeof(multicast_addr)) != sizeof(metadata)) {
-        perror("Failed to send metadata");
-        exit(EXIT_FAILURE);
-    }
-
-    // Send matrix in chunks
     printf("Broadcasting matrix via multicast...\n");
-    for (int i = 0; i < state->n; i += CHUNK_SIZE) {
-        int rows_to_send = (i + CHUNK_SIZE > state->n) ? state->n - i : CHUNK_SIZE;
+    for (int i = 0; i < state->n; i += max_rows_per_chunk) {
+        int rows_to_send = (i + max_rows_per_chunk > state->n) ? state->n - i : max_rows_per_chunk;
         int total_bytes = rows_to_send * state->n * sizeof(int);
-        
+
         if (sendto(sock, &state->matrix[i][0], total_bytes, 0,
-                  (struct sockaddr *)&multicast_addr, sizeof(multicast_addr)) != total_bytes) {
+                   (struct sockaddr *)&multicast_addr, sizeof(multicast_addr)) != total_bytes) {
             perror("Failed to send matrix chunk");
             exit(EXIT_FAILURE);
         }
@@ -194,41 +182,16 @@ void distribute_multicast(ProgramState *state) {
     // Send end marker
     int end_marker = -1;
     if (sendto(sock, &end_marker, sizeof(end_marker), 0,
-              (struct sockaddr *)&multicast_addr, sizeof(multicast_addr)) != sizeof(end_marker)) {
+               (struct sockaddr *)&multicast_addr, sizeof(multicast_addr)) != sizeof(end_marker)) {
         perror("Failed to send end marker");
         exit(EXIT_FAILURE);
     }
 
-    // Wait for acknowledgments from all slaves
-    printf("Waiting for acknowledgments...\n");
-    struct sockaddr_in ack_addr;
-    socklen_t ack_addr_len = sizeof(ack_addr);
-    int acks_received = 0;
-    char ack_buffer[4];
-
-    // Set timeout for ACKs
-    struct timeval timeout;
-    timeout.tv_sec = ACK_TIMEOUT;
-    timeout.tv_usec = 0;
-    setsockopt(ack_sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
-
-    while (acks_received < state->t) {
-        ssize_t bytes = recvfrom(sock, ack_buffer, sizeof(ack_buffer), 0,
-                (struct sockaddr *)&ack_addr, &ack_addr_len);
-        if (bytes > 0 && strncmp(ack_buffer, "ACK", 3) == 0) {
-            acks_received++;
-            printf("Received ACK from %s:%d (%d/%d)\n", 
-                   inet_ntoa(ack_addr.sin_addr), ntohs(ack_addr.sin_port),
-                   acks_received, state->t);
-        }
-    }
-
     close(sock);
-    close(ack_sock);
 
     gettimeofday(&time_after, NULL);
-    double elapsed = (time_after.tv_sec - time_before.tv_sec) + 
-                    (time_after.tv_usec - time_before.tv_usec) / 1000000.0;
+    double elapsed = (time_after.tv_sec - time_before.tv_sec) +
+                     (time_after.tv_usec - time_before.tv_usec) / 1000000.0;
     printf("Multicast distribution completed in %.6f seconds\n", elapsed);
 }
 
