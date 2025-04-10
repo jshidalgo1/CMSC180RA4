@@ -286,11 +286,8 @@ int main(int argc, char *argv[]) {
         
         printf("Running as master with %d slaves\n", state.t);
         
-        // Generate slave ports dynamically (5001, 5002, etc.)
-        for (int i = 0; i < state.t; i++) {
-            strcpy(state.slaves[i].ip, "127.0.0.1");
-            state.slaves[i].port = state.p + i + 1;
-        }
+        // Read slave IPs and ports from config.txt
+        read_config(&state, state.t);
         
         allocate_matrix(&state);
         create_matrix(&state);
