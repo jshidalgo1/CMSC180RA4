@@ -8,11 +8,12 @@
 #include <time.h>
 #include <netinet/tcp.h>
 #include <pthread.h>
+#include <stdint.h> // Include for uint8_t
 
 #define MAX_SLAVES 16
-#define BUFFER_SIZE (15 * 1024 * 1024)  // 15MB buffer
-#define CONFIG_FILE "config1.txt"
-#define CHUNK_SIZE 2000              // Rows per chunk
+#define BUFFER_SIZE (1 * 1024 * 1024)  // 1MB buffer
+#define CONFIG_FILE "config.txt"
+#define CHUNK_SIZE 50              // Rows per chunk
 
 typedef struct {
     char ip[16];
@@ -20,12 +21,12 @@ typedef struct {
 } SlaveInfo;
 
 typedef struct {
-    int n;       // Matrix size
-    int p;       // Port number
-    int s;       // Status (0=master, 1=slave)
-    int t;
+    int **matrix; // Change matrix type to int
+    int n;        // Matrix size
+    int p;        // Port number
+    int s;        // Status (0=master, 1=slave)
+    int t;        // Number of slaves
     SlaveInfo slaves[MAX_SLAVES];
-    int **matrix;
 } ProgramState;
 
 typedef struct {
@@ -85,6 +86,9 @@ void create_matrix(ProgramState *state) {
     }
 }
 
+#include <unistd.h> // For usleep
+#include <sys/time.h> // For timing
+
 void *send_to_slave(void *arg) {
     ThreadArgs *args = (ThreadArgs *)arg;
     ProgramState *state = args->state;
@@ -125,15 +129,22 @@ void *send_to_slave(void *arg) {
         exit(EXIT_FAILURE);
     }
 
+    // Start timing
+    struct timeval time_before, time_after;
+    gettimeofday(&time_before, NULL);
+
     // Send data in chunks
     printf("Sending rows %d to %d to slave %d\n", 
            start_row, start_row + rows_for_this_slave - 1, slave);
+
+    size_t total_bytes_sent = 0; // Track total bytes sent
 
     for (int i = 0; i < rows_for_this_slave; i += CHUNK_SIZE) {
         int rows_to_send = (i + CHUNK_SIZE > rows_for_this_slave) ? 
                           (rows_for_this_slave - i) : CHUNK_SIZE;
         int total_bytes = rows_to_send * state->n * sizeof(int);
-        
+        total_bytes_sent += total_bytes;
+
         // Allocate temporary buffer
         int *buffer = malloc(total_bytes);
         for (int j = 0; j < rows_to_send; j++) {
@@ -148,7 +159,23 @@ void *send_to_slave(void *arg) {
             exit(EXIT_FAILURE);
         }
         free(buffer);
+
+        
+        double delay_in_seconds = (double)total_bytes / 6062500; // 1,875,000 bytes per second
+        usleep((useconds_t)(delay_in_seconds * 1e6)); // Convert seconds to microseconds
     }
+
+    // End timing
+    gettimeofday(&time_after, NULL);
+
+    // Calculate elapsed time
+    double elapsed = (time_after.tv_sec - time_before.tv_sec) + 
+                     (time_after.tv_usec - time_before.tv_usec) / 1000000.0;
+
+    // Calculate Mbps
+    double mbps = (total_bytes_sent * 8) / (elapsed * 1000000.0); // Convert bytes to bits, then to Mbps
+    printf("Slave %d: Sent %zu bytes in %.6f seconds (%.2f Mbps)\n", 
+           slave, total_bytes_sent, elapsed, mbps);
 
     // Wait for acknowledgment
     char ack[4];
@@ -200,6 +227,16 @@ void distribute_submatrices(ProgramState *state) {
     printf("Master elapsed time: %.6f seconds\n", elapsed);
 }
 
+void print_matrix(int **matrix, int rows, int cols) {
+    printf("Received matrix:\n");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 void slave_listen(ProgramState *state) {
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) {
@@ -232,7 +269,7 @@ void slave_listen(ProgramState *state) {
     printf("Slave listening on port %d...\n", state->p);
 
     struct timeval time_before, time_after;
-    
+
     int addrlen = sizeof(address);
     int master_sock = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
     if (master_sock < 0) {
@@ -268,6 +305,7 @@ void slave_listen(ProgramState *state) {
     }
 
     // Receive the submatrix data in chunks
+    size_t total_data_received = 0; // Track total data received
     for (int i = 0; i < rows; i += CHUNK_SIZE) {
         int rows_to_receive = (i + CHUNK_SIZE > rows) ? (rows - i) : CHUNK_SIZE;
         int total_bytes = rows_to_receive * cols * sizeof(int);
@@ -287,21 +325,23 @@ void slave_listen(ProgramState *state) {
             }
             bytes_received += result;
         }
+
+        total_data_received += bytes_received; // Accumulate data received
         
-        // // Copy to submatrix
-        // for (int j = 0; j < rows_to_receive; j++) {
-        //     memcpy(submatrix[i + j], buffer + j * cols, cols * sizeof(int));
-        // }
+        // Copy to submatrix
+        for (int j = 0; j < rows_to_receive; j++) {
+            memcpy(submatrix[i + j], buffer + j * cols, cols * sizeof(int));
+        }
         free(buffer);
     }
 
     printf("Slave finished receiving data from master.\n");
+    printf("Total data received: %zu bytes\n", total_data_received);
+
+    // Print the received matrix
+    // print_matrix(submatrix, rows, cols);
 
     // Simulate processing and send acknowledgment
-    // printf("Slave processing data...\n");
-    // sleep(1); // Simulate some processing time
-
-    // Send acknowledgment
     if (send(master_sock, "ack", 4, 0) != 4) {
         perror("Failed to send acknowledgment");
         exit(EXIT_FAILURE);
@@ -355,6 +395,11 @@ int main(int argc, char *argv[]) {
         read_config(&state, state.t);
         allocate_matrix(&state);
         create_matrix(&state);
+
+        // Print the created matrix
+        printf("Master created matrix:\n");
+        // print_matrix(state.matrix, state.n, state.n);
+
         distribute_submatrices(&state);
         free_matrix(&state);
     } else {
