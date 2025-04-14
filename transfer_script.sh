@@ -10,11 +10,7 @@ USER="cmsc180"
 PASSWORD="useruser"
 
 # Loop through the range 01 to 18, skipping 09 and 12
-for i in $(seq -w 01 18); do
-    if [ "$i" == "09" ] || [ "$i" == "12" ]; then
-        echo "Skipping drone${i}..."
-        continue
-    fi
+for i in $(seq -w 01 27); do
 
     HOST="${USER}@drone${i}"
     echo "Transferring ${FILE} to ${HOST}..."

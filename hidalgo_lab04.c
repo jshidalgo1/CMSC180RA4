@@ -13,7 +13,7 @@
 #define MAX_SLAVES 16
 #define BUFFER_SIZE (1 * 1024 * 1024)  // 1MB buffer
 #define CONFIG_FILE "config.txt"
-#define CHUNK_SIZE 50              // Rows per chunk
+#define CHUNK_SIZE 20              // Rows per chunk
 
 typedef struct {
     char ip[16];
@@ -160,9 +160,7 @@ void *send_to_slave(void *arg) {
         }
         free(buffer);
 
-        
-        double delay_in_seconds = (double)total_bytes / 6062500; // 1,875,000 bytes per second
-        usleep((useconds_t)(delay_in_seconds * 1e6)); // Convert seconds to microseconds
+        usleep(1000); // 1 millisecond delay
     }
 
     // End timing
