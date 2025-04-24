@@ -9,7 +9,7 @@
 
 #define MAX_SLAVES 16
 #define BUFFER_SIZE 1024
-#define CONFIG_FILE "config.txt"
+#define CONFIG_FILE "config_.txt"
 
 typedef struct {
     char ip[16];
